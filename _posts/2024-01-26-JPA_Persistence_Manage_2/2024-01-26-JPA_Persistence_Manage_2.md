@@ -1,3 +1,8 @@
+---
+categories: [JPA, Persistence]
+tags: [Persistence, 영속성]
+---
+
 ### Flush의 동작
 `Flush()`는 영속성 컨택스의 변경 내용을 DB에 반영하는 과정이다. 
 
