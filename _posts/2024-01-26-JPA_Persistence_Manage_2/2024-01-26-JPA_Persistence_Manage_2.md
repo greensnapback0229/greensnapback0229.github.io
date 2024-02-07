@@ -1,5 +1,5 @@
 ---
-categories: [JPA, Persistence]
+categories: [JPA, Persistence_Manage]
 tags: [Persistence, 영속성]
 ---
 

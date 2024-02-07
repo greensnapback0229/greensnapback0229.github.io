@@ -1,3 +1,8 @@
+---
+categories: [JPA, Persistence_Manage]
+tags: [Persistence, 영속성]
+---
+
 **Persistence Unit(영속성 유닛)**  
 응용프로그램에서 EntityMnager 인스턴스에 의해서 관리되는 모든 엔티티 클래스의 집합. 
 
