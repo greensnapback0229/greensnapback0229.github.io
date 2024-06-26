@@ -91,7 +91,7 @@ spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.Ca
 
 # 변경없이 그대로 쓰기
 spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-```
+```s
 
 `CamelCaseToUnderscoresNamingStrategy`옵션을 application.properties에 적용하면 자동으로 Camel케이스가 `_(underscore)`를 사용하는 snake 케이스로 자동 변환된다. 
 
