@@ -36,6 +36,7 @@ social:
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
   name: greensnapback0229
   email: smdmim@gmail.com # change to your email address
+  avatar: "/assets/git_profile.jpg" 
   links:
     # The first element serves as the copyright owner's link
     - https://twitter.com/username # change to your twitter homepage
@@ -43,6 +44,7 @@ social:
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
+  
 
 google_site_verification: # fill in to your verification string
 
@@ -73,11 +75,11 @@ theme_mode: # [light|dark]
 img_cdn: 
 
 # the avatar on sidebar, support local or CORS resources
-avatar: /assets/blog_profile.jpg
+avatar: /assets/git_profile.jpg
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
-social_preview_image: /assets/blog_profile.jpg
+social_preview_image: /assets/git_profile.jpg
 
 # boolean type, the global switch for TOC in posts.
 toc: true
