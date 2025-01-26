@@ -55,8 +55,7 @@ CSV에 많은 양의 데이터가 담길 것으로 예상되었기 때문에 효
 * ***매칭 요청 및 결과 응답***
 * ***CSV에 유저 데이터 반영(CRUD)***
 
-
-***<img src="https://img.shields.io/badge/-231F20?style=flat&logo=apachekafka&logoColor=white">Kafka***   
+**![Apache Kafka Logo](https://img.shields.io/badge/-231F20?style=flat&logo=apachekafka&logoColor=white)  Kafka**  
 최근 대규모 분산 데이터 처리에서 굉장히 각광받는 핫한 기술이었습니다 다음과 같은 장점이 있었습니다. 
 * 메시지 로그를 디스크에 저장하여 유실 방지 및 재처리가 가능.
 * Pub/Sub 모델을 통해 데이터의 발행과 구독이 용이.
@@ -67,7 +66,7 @@ CSV에 많은 양의 데이터가 담길 것으로 예상되었기 때문에 효
 * 요구 트래픽 수준에서는 오버 엔지니어링 가능성.
 * 응답이 필요한 상황에서는 MSA 디자인 패턴을 적용해야 할 추가 개발 요소가 발생.
 
-***<img src="https://img.shields.io/badge/-FF4438?style=flat&logo=redis&logoColor=white"> Redis Pub/Sub***  
+**![Redis Logo](https://img.shields.io/badge/-FF4438?style=flat&logo=redis&logoColor=white) Redis**  
 Redis Pub/Sub는 메모리 기반 메시징 미들웨어로, 다음과 같은 장점이 있었습니다:
 
 * 고속 메시지 처리로 실시간 통신이 가능.
@@ -78,7 +77,7 @@ Redis Pub/Sub는 메모리 기반 메시징 미들웨어로, 다음과 같은 �
 
 빠른 처리가 필요한 단순 메시지 전송에는 적합하지만, 적어도 사용자의 포인트를 사용하는 매칭 기능에 결합되는 만큼 안정성을 고려해야했습니다.
 
-***<img src="https://img.shields.io/badge/-FF6600?style=flat&logo=rabbitMQ&logoColor=white"> RabbitMQ `selected`***   
+**![RabbitMQ Logo](https://img.shields.io/badge/-FF6600?style=flat&logo=rabbitMQ&logoColor=white)  RabbitMQ `selected`**  
 RabbitMQ는 프로젝트 요구사항에 가장 부합하는 선택지였습니다.
 특히, 다음과 같은 이유로 RabbitMQ를 도입하게 되었습니다.
 
