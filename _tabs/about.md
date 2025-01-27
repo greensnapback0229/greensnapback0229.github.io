@@ -15,19 +15,19 @@ order: 4
 <!-- about comatching -->
 <div style="display: flex; align-items: center;">
     <a href="https://comatching-devs.web.app">
-        <img align="left" height="96px" width="96px" alt="Warpnet" src="https://raw.githubusercontent.com/greensnapback0229/greensnapback0229/refs/heads/main/assets/comatching_icon.png"/>
+        <img align="left" height="96px" width="96px" alt="Warpnet" src="https://raw.githubusercontent.com/greensnapback0229/greensnapback0229/refs/heads/main/assets/comatching_icon.png", alt="comatching"/>
     </a>
     <div style="margin-left: 10px;">
         <strong><a href="https://comatching-devs.web.app">COMAtching</a> • 대학생 AI 이성 매칭 서비스
         </strong>
         <br>
         Role: Back-End Developer & Project Manager<br>
-        <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=springboot&logoColor=white">
-        <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white"> 
-        <img src="https://img.shields.io/badge/RabbitMQ-FF6600?style=flat&logo=rabbitMQ&logoColor=white">
-        <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white">
-        <img src="https://img.shields.io/badge/nginx-009639?style=flat&logo=nginx&logoColor=white">
-        <img src="https://img.shields.io/badge/redis-FF4438?style=flat&logo=redis&logoColor=white">
+        <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=springboot&logoColor=white", alt="spring">
+        <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white" , alt="mysql"> 
+        <img src="https://img.shields.io/badge/RabbitMQ-FF6600?style=flat&logo=rabbitMQ&logoColor=white" , alt="rabbitMQ">
+        <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white", alt="docker">
+        <img src="https://img.shields.io/badge/nginx-009639?style=flat&logo=nginx&logoColor=white", alt="nginx">
+        <img src="https://img.shields.io/badge/redis-FF4438?style=flat&logo=redis&logoColor=white", alt="redis">
         <br>
         About Project: 
         <a href="https://github.com/COMAtching/COMAtching3_BE"><strong>Ver3(latest)</strong></a>, 
@@ -40,18 +40,18 @@ order: 4
 <!-- about BFC friends community -->
 <div style="display: flex; align-items: center;">
     <a href="https://fc.comatching.site">
-        <img align="left" height="96px" width="96px" alt="Warpnet" src="https://raw.githubusercontent.com/greensnapback0229/greensnapback0229/refs/heads/main/assets/bucheon_fc_friends_community_logo.png"/>
+        <img align="left" height="96px" width="96px" alt="Warpnet" src="https://raw.githubusercontent.com/greensnapback0229/greensnapback0229/refs/heads/main/assets/bucheon_fc_friends_community_logo.png", alt="bfc_friends_community"/>
     </a>
     <div style="margin-left: 10px;">
         <strong><a href="https://fc.comatching.site">부천FC friends community</a> • 스포츠 응원성향 AI 친구 매칭 서비스
         </strong><br>
         Role: Back-End Developer & Project Manager<br>
-        <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=springboot&logoColor=white">
-        <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white"> 
-        <img src="https://img.shields.io/badge/RabbitMQ-FF6600?style=flat&logo=rabbitMQ&logoColor=white">
-        <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white">
-        <img src="https://img.shields.io/badge/nginx-009639?style=flat&logo=nginx&logoColor=white">
-        <img src="https://img.shields.io/badge/redis-FF4438?style=flat&logo=redis&logoColor=white">
+        <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=springboot&logoColor=white", alt="spring">
+        <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white" , alt="mysql"> 
+        <img src="https://img.shields.io/badge/RabbitMQ-FF6600?style=flat&logo=rabbitMQ&logoColor=white" , alt="rabbitMQ">
+        <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white", alt="docker">
+        <img src="https://img.shields.io/badge/nginx-009639?style=flat&logo=nginx&logoColor=white", alt="nginx">
+        <img src="https://img.shields.io/badge/redis-FF4438?style=flat&logo=redis&logoColor=white", alt="redis">
         <br>
         About Project: 
         <a href="https://github.com/COMAtching/COMAtching_FC_BE">Description</a> 
@@ -62,16 +62,17 @@ order: 4
 <!-- about magic of conch -->
 <div style="display: flex; align-items: center;">
     <a href="https://apps.apple.com/kr/app/%EC%86%8C%EB%9D%BC%EC%9D%98-%EB%A7%88%EB%B2%95/id6473936311">
-        <img align="left" height="96px" width="96px" alt="Warpnet" src="https://raw.githubusercontent.com/greensnapback0229/greensnapback0229/refs/heads/main/assets/magic_of_conch_icon.png"/>
+        <img align="left" height="96px" width="96px" alt="Warpnet" src="https://raw.githubusercontent.com/greensnapback0229/greensnapback0229/refs/heads/main/assets/magic_of_conch_icon.png", alt="sora"/>
     </a>
     <div style="margin-left: 10px;">
         <strong><a href="https://apps.apple.com/kr/app/%EC%86%8C%EB%9D%BC%EC%9D%98-%EB%A7%88%EB%B2%95/id6473936311">MagicOfConch</a> • 일기 습관 형성 서비스
         </strong><br>
         Role: Back-End Developer<br>
-        <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=springboot&logoColor=white"> 
-        <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white"> 
-        <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white">
-        <img src="https://img.shields.io/badge/nginx-009639?style=flat&logo=nginx&logoColor=white"><br>
+        <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=springboot&logoColor=white", alt="spring">
+        <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white" , alt="mysql"> 
+        <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white", alt="docker">
+        <img src="https://img.shields.io/badge/nginx-009639?style=flat&logo=nginx&logoColor=white", alt="nginx">
+        <br>
         About Project: 
         <a href="https://apps.apple.com/kr/app/%EC%86%8C%EB%9D%BC%EC%9D%98-%EB%A7%88%EB%B2%95/id6473936311">Description</a> 
     </div>
