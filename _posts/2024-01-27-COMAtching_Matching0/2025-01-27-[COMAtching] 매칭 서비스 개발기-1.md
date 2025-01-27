@@ -13,10 +13,10 @@ summary: 코매칭 서비스 개발기
 Ver1부터 3까지 고민했던 비즈니스 로직과 기술적 고민들에 관한 내용입니다.
 
 
-# Ver1 매칭
+## Ver1 매칭
 Ver1에서는 정말 단순하게 crud 밖에 할줄 모르던 시기였고 그냥 이렇게 귀엽게 개발했었다는 내용입니다.
 
-## Ver1 매칭 로직
+### Ver1 매칭 로직
 Ver1은 MBTI 기반의 매칭이었습니다. 원하는 상대의 MBTI 중 E/I와 P/J를 골라서 해당하는 MBTI를 가진 유저를 랜덤으로 매칭해주었습니다.
 
 ```java
@@ -34,4 +34,9 @@ if (ei.equals("Z") && jp.equals("X")) {
 DB 설계도 부족했고 ORM을 부턱대고 쓰다보니 이렇게 되어버렸다.. 
 
 ## Ver2 매칭
+ㄹㅇㄴ
+### AI 도입 
+> Ver2부터 AI를 도입하기 시작했습니다.
+많은 
+
 ![ver2_matching](/assets/comatching_2_matching_sequence_diagram.svg)
