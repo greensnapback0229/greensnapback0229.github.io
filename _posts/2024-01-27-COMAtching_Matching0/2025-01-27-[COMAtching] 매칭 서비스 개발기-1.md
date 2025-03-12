@@ -37,7 +37,8 @@ DB 설계도 부족했고 ORM을 무턱대고 쓰다보니 이렇게 되어버�
 ## Ver2 매칭
 
 Ver2부터 MBTI 외에도 다른 옵션들을 추가하는 기획이 있었고 나이, 연락빈도, MBTI, 취미와 같은 옵션을 추가하여 매칭을 하는 기능이 요구되었습니다.  
-학교 축제 특성상 부스에서 행사가 진행되었고 운영자가 사용자의 QR을 인식하여 운영자의 테블릿에서 매칭을 옵션을 선택할 수 있는 참여형
+학교 축제 특성상 부스에서 행사가 진행되었고 운영자가 사용자의 QR을 인식하여 운영자의 테블릿에서 매칭을 옵션을 선택할 수 있는 참여형 매칭 서비스를 기획했습니다.
+
 아래는 매칭 서비스 플로우입니다.
 ![ver2_matching](/assets/comatching_2_matching_sequence_diagram.svg)
 
@@ -51,9 +52,9 @@ Ver2부터 MBTI 외에도 다른 옵션들을 추가하는 기획이 있었고 �
 - 매칭시 AI를 모델을 실행시키고 결과를 읽어와야 합니다.
 
 이를 위해서 OpenCSV 라이브러리를 도입해 CSV 파일 관리를 위한 컴포넌트를 개발했습니다.
-CSV파일을 접근할때 동시성 문제가 있었습니다. rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+CSV파일을 접근할때 동시성 문제가 있었습니다.
 
-**\<example\>**  
+**[example]**  
 사용자가 뽑힐 기회가 없어지면 CSV에서 제외되어야 하는데 쓰기 작업중에 파일을 읽게되면 해당 사용자가 포함된 상태로 매칭로직이 진행이됩니다.
 
 이를 위해서 CSV 관리 컴포넌트에 Lock/Unlock 방식을 적용해서 동시에 여러 쓰레드가 파일에 접근하지 못하도록하여 문제를 해결했습니다.
@@ -134,13 +135,13 @@ public class CSVHandler {
 
 ### AI 실행 동시성 문제 발생
 
-[상황]  
+**[상황]**  
 AI 모델을 실행시키는 메서드 `ComatchingAiConnectService.requestMatch()`는 CSV파일에 **매칭을 요청한 유저, 매칭 옵션**이 입력되면 AI 모델을 실행시켜 모델의 결과값을 읽어오는 기능을 합니다.
 
 요청 순서도
 ![ver2_matching_prob](/assets/comatching2_csv_prob.png)
 
-[문제]  
+**[문제]**  
 여러 요청이 멀티스레드 환경에서 `requestMatch()`메서드를 실행시키며 AI 모델의 출력을 알맞은 요청의 스레드가 읽지 않고 다른 스레드가 읽는 상황이 생겼습니다.
 
 | 시간 | 요청 1 (Request 1)           | 요청 2 (Request 2)           | AI 응답                   |
@@ -153,12 +154,13 @@ AI 모델을 실행시키는 메서드 `ComatchingAiConnectService.requestMatch(
 | ⑥    | `reader.readLine() 실행`     |                              | ❌ **"BOB" (잘못된 값!)** |
 | ⑦    | `findByUsername("BOB") 실행` | `findByUsername("BOB") 실행` |                           |
 
+**[해결]**
 이를 해결하기 위해서 1번의 요청에 대해서 모델 실행, 결과값 읽기가 1건당 1번만 동시에 실행되도록 `sychronized` 키워드를 메서드에 적용했습니다.
 
 ```java
 	/**
 	 * AI를 실행 후 프롬프트의 결과 값을 인식(사용자 uuid)
-	 * @return : 결과로 나온 사용자의 결과창에 필요한 정보
+	 * @return : 결과로 나온 사용자 uuid
 	 */
 	public synchronized MatchRes requestMatch() {
 		String enemyUsername;
