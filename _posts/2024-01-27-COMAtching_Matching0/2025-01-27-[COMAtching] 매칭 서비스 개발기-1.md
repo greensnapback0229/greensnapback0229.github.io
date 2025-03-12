@@ -143,19 +143,15 @@ AI 모델을 실행시키는 메서드 `ComatchingAiConnectService.requestMatch(
 [문제]  
 여러 요청이 멀티스레드 환경에서 `requestMatch()`메서드를 실행시키며 AI 모델의 출력을 알맞은 요청의 스레드가 읽지 않고 다른 스레드가 읽는 상황이 생겼습니다.
 
-```arduino
-요청 1 → startAiCommand 실행 → AI가 "ALEX" 출력 준비
-요청 2 → startAiCommand 실행 → AI가 "BOB" 출력 준비
-
-요청 2 → process.waitFor() 완료 → AI가 "BOB" 출력
-요청 2 → reader.readLine() 실행 → enemyUsername = "BOB"
-
-요청 1 → process.waitFor() 완료 → AI가 "ALEX" 출력
-요청 1 → reader.readLine() 실행 → enemyUsername = "BOB" (잘못된 값!)
-
-요청 1 → userInfoRepository.findByUsername("BOB") (잘못된 상대와 매칭)
-요청 2 → userInfoRepository.findByUsername("BOB") (정상)
-```
+| 시간 | 요청 1 (Request 1)           | 요청 2 (Request 2)           | AI 응답                   |
+| ---- | ---------------------------- | ---------------------------- | ------------------------- |
+| ①    | `startAiCommand 실행`        |                              |                           |
+| ②    |                              | `startAiCommand 실행`        |                           |
+| ③    |                              | `process.waitFor() 완료`     | AI가 `"BOB"` 출력         |
+| ④    |                              | `reader.readLine() 실행`     | `enemyUsername = "BOB"`   |
+| ⑤    | `process.waitFor() 완료`     |                              | AI가 `"ALEX"` 출력        |
+| ⑥    | `reader.readLine() 실행`     |                              | ❌ **"BOB" (잘못된 값!)** |
+| ⑦    | `findByUsername("BOB") 실행` | `findByUsername("BOB") 실행` |                           |
 
 이를 해결하기 위해서 1번의 요청에 대해서 모델 실행, 결과값 읽기가 1건당 1번만 동시에 실행되도록 `sychronized` 키워드를 메서드에 적용했습니다.
 
