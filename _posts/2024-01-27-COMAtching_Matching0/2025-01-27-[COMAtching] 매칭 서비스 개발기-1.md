@@ -2,7 +2,7 @@
 layout: post
 title: "[COMAtching] 매칭 서비스 개발기-1"
 date: 2025-01-01 13:35
-category: [COMAtching, TIL]
+category: [COMAtching, Troubleshooting]
 author: [greensnapback0229]
 tags: []
 summary: 코매칭 서비스 개발기
@@ -154,8 +154,8 @@ AI 모델을 실행시키는 메서드 `ComatchingAiConnectService.requestMatch(
 | ⑥    | `reader.readLine() 실행`     |                              | ❌ **"BOB" (잘못된 값!)** |
 | ⑦    | `findByUsername("BOB") 실행` | `findByUsername("BOB") 실행` |                           |
 
-**[해결]**
-이를 해결하기 위해서 1번의 요청에 대해서 모델 실행, 결과값 읽기가 1건당 1번만 동시에 실행되도록 `sychronized` 키워드를 메서드에 적용했습니다.
+**[해결]**  
+이를 해결하기 위해서 1번의 요청에 대해서 모델 실행, 결과값 읽기가 1건당 1번만 동시에 실행되도록 `sychronized` 키워드를 메서드에 적용했고 race condition을 해결할 수 있었습니다.
 
 ```java
 	/**
