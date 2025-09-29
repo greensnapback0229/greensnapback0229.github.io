@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[COMAtching] Ver3 아키텍처"
+title: (COMAtching) Ver3 아키텍처
 date: 2024-12-23 23:38
 category: [COMAtching, architecture]
 author: greensnapback0229

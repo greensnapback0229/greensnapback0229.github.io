@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[COMAtching] 매칭 서비스 개발기-2"
+title: (COMAtching) 매칭 서비스 개발기-2
 date: 2025-01-01 13:35
 category: [COMAtching, Troubleshooting]
 author: [greensnapback0229]
