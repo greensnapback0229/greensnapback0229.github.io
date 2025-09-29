@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Comparable  &amp; Comparator
+title: Comparable  vs Comparator
 date: 2024-04-16 00:00
 category: [TIL]
 author: "greensnapback0229"
