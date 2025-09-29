@@ -95,14 +95,18 @@ comments:
     issue_term: # < url | pathname | title | ...>
   # Giscus options › https://giscus.app
   giscus:
-    repo: # <gh-username>/<repo>
-    repo_id:
-    category:
-    category_id:
-    mapping: # optional, default to 'pathname'
-    input_position: # optional, default to 'bottom'
-    lang: # optional, default to the value of `site.lang`
-    reactions_enabled: # optional, default to the value of `1`
+    repo: "greensnapback0229/greensnapback0229.github.io"
+    repo_id: "R_kgDOLNUM9A"
+    category: "General"
+    category_id: "DIC_kwDOLNUM9M4CwCLt"
+    mapping: "pathname"
+    strict: 0
+    reactions_enabled: 1
+    emit_metadata: 0
+    input_position: "bottom"
+    theme: "preferred_color_scheme"
+    lang: "ko"
+
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
 assets:
