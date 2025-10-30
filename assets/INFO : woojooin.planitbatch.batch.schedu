@@ -1,0 +1,30 @@
+INFO : woojooin.planitbatch.batch.scheduler.RebalanceScheduler - [Rebalance Batch] - runRebalanceJob() start ===>>>>>
+INFO : org.springframework.batch.core.repository.support.JobRepositoryFactoryBean - No database type set, using meta data indicating: MYSQL
+INFO : org.springframework.batch.core.repository.support.JobRepositoryFactoryBean - No database type set, using meta data indicating: MYSQL
+INFO : org.springframework.batch.core.launch.support.SimpleJobLauncher - No TaskExecutor has been set, defaulting to synchronous executor.
+INFO : org.springframework.batch.core.launch.support.SimpleJobLauncher - Job: [SimpleJob: [name=rebalancingJob]] launched with the following parameters: [{ts=1761717236656}]
+INFO : woojooin.planitbatch.batch.listener.JobExecutionTimeListener - Job rebalancingJob started at Wed Oct 29 14:53:56 KST 2025
+INFO : org.springframework.batch.core.job.SimpleStepHandler - Executing step: [rebalanceMasterStep]
+INFO : woojooin.planitbatch.batch.partitioner.RebalancePartitioner - partition 0 - start=0, end=50000
+INFO : woojooin.planitbatch.batch.partitioner.RebalancePartitioner - partition 1 - start=50000, end=100000
+INFO : woojooin.planitbatch.batch.partitioner.RebalancePartitioner - partition 2 - start=100000, end=150000
+INFO : woojooin.planitbatch.batch.partitioner.RebalancePartitioner - partition 3 - start=150000, end=200000
+INFO : woojooin.planitbatch.global.component.PartitionStepTimeLogger - [rebalanceSlaveStep:partition-0] Step started on thread: batch-executor-1
+INFO : woojooin.planitbatch.global.component.PartitionStepTimeLogger - [rebalanceSlaveStep:partition-2] Step started on thread: batch-executor-2
+INFO : woojooin.planitbatch.global.component.PartitionStepTimeLogger - [rebalanceSlaveStep:partition-3] Step started on thread: batch-executor-4
+INFO : woojooin.planitbatch.global.component.PartitionStepTimeLogger - [rebalanceSlaveStep:partition-1] Step started on thread: batch-executor-3
+INFO : org.springframework.batch.core.step.AbstractStep - Step: [rebalanceSlaveStep:partition-0] executed in 4m10s911ms
+INFO : org.springframework.batch.core.step.AbstractStep - Step: [rebalanceSlaveStep:partition-1] executed in 10m41s915ms
+INFO : org.springframework.batch.core.step.AbstractStep - Step: [rebalanceSlaveStep:partition-2] executed in 17m9s21ms
+INFO : org.springframework.batch.core.step.AbstractStep - Step: [rebalanceSlaveStep:partition-3] executed in 26m42s366ms
+INFO : org.springframework.batch.core.step.AbstractStep - Step: [rebalanceMasterStep] executed in 26m43s295ms
+INFO : woojooin.planitbatch.batch.listener.JobExecutionTimeListener - Job rebalancingJob finished at Wed Oct 29 15:20:40 KST 2025 with status: COMPLETED
+INFO : woojooin.planitbatch.batch.listener.JobExecutionTimeListener - Job rebalancingJob execution time: 1603315 ms (1603.315 seconds)
+INFO : org.springframework.batch.core.launch.support.SimpleJobLauncher - Job: [SimpleJob: [name=rebalancingJob]] completed with the following parameters: [{ts=1761717236656}] and the following status: [COMPLETED] in 26m43s324ms
+INFO : woojooin.planitbatch.batch.scheduler.RebalanceScheduler - [Rebalance Batch] - runRebalanceJob() finish ===>>>>>
+
+
+
+
+
+
