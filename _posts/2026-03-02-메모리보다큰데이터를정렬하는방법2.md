@@ -1,0 +1,180 @@
+---
+layout: post
+title: (CS) 메모리보다 큰 데이터를 정렬하는 방법(MySQL)
+date: 2026-03-02 24:00
+category: [Algorithm]
+author: greensnapback0229
+tags: [sort, mysql, count]
+summary: 
+
+---
+
+
+
+> Database에 대해서 공부한 내용을 정리한 글입니다.  
+> MySQL의 정렬 과정에 관한 글입니다.  
+> 실제 눈으로 보며 MySQL에서 데이터의 정렬을 효율적으로 하는 법을 공부합니다. 
+
+
+
+## DB에서는 메모리보다 큰 용량을 어떻게 처리할까? 
+
+데이터를 보조 기억장치에 효율적으로 저장하는 방법으로 RDB를 정말 많이 사용합니다. 
+
+그렇다면 사실상 Backend 서버에서 항상 모든 데이터를 읽어서 서버에 적재한 뒤에 데이터를 정렬하는 방식 보다는 DB에서 처리하는게 나아보입니다. 
+
+그렇다면 DB에서는 메모리보다 큰 데이터를 정렬할때 어떤 과정을 거치는지 대표적인 RDB MySQL보며 확인해보겠습니다. 
+
+
+
+## MySQL의 동작방식 
+
+MySQL도 마찬가지로 K-Way 알고리즘과 비슷한 방식의 `filesort`오퍼레이션이 동작합니다.
+
+`filesort` 오퍼레이션은 `ORDER BY`절을 사용했을때 데이터가 인덱스 되지 않으면 실행됩니다.  
+
+이때 정렬은 sort_buffer에서 실행되는데 이는 세션별로 즉 커넥션별로 할당 되는 정렬을 위한 버퍼 공간입니다. 
+
+ `filesort` 오퍼레이션 과정에서 `sort_buffered_size`보다 많은 양의 데이터를 메모리에 올리게 되면 임시 디스크 파일을 사용하여 merge 하는 과정을 거칩니다.  
+
+<br>
+
+**mysql 공식 문서에서는 이 과정에서 다음과 같은 최적화 방안을 제공합니다.** ([공식문서](https://dev.mysql.com/doc/refman/8.4/en/order-by-optimization.html))
+
+- 만약 merge 횟수가 많아질 경우에는 `sort_buffered_size`를 늘려 한번에 메모리에 올릴 수 있는 양을 늘립니다. 
+- `read_rnd_buffered_size`를 증가시켜 한번에 읽을 수 있는 row의 수를 늘립니다. 
+
+<br>
+
+*실제 sort_buffered_size보다 큰 용량의 데이터를 저장하고 정렬을 하는 과정을 직접 눈으로 보며 확인해봅시다.* 
+
+
+
+## 실습
+
+### 1. 실습 환경
+
+실습을 위해서 다음과 같은 테이블을 만들겠습니다. 
+
+- name에는 uuid를 할당
+- score에 100,000이하의 랜덤 정수
+- padding에 900byte 정도의 더미 문자열 넣기 (약 1kb로 맞춰서 계산 용이하게)
+
+
+
+> 테스트 테이블 ERD
+
+![image-20260303013058877](/Users/seoseungjun/Desktop/vs_code_workspace/greensnapback0229.github.io/assets/image-20260303013058877.png)
+
+> 테이블 생성 SQL & 더미 데이터 삽입
+
+```sql
+-- 테이블 생성
+CREATE TABLE user_test ( 
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50),
+    score INT,
+    padding VARCHAR(900)  -- row 크기 키우기 (1KB)
+);
+
+-- 테스트용 dummy 데이터 넣기
+INSERT INTO user_test (name, score, padding)
+SELECT
+  UUID(),
+  FLOOR(RAND()*100000),
+  RPAD('x',900,'x')				-- padding 컬럼 x로 900개로 채우기
+FROM
+  information_schema.columns a,
+  information_schema.columns b
+LIMIT 5000000;	
+```
+
+> 삽입된 데이터 예시
+
+![image-20260303013402336](/Users/seoseungjun/Desktop/vs_code_workspace/greensnapback0229.github.io/assets/image-20260303013402336.png)
+
+기본 sort_buffered_size를 확인해봅시다. 
+
+![image-20260303015556440](/Users/seoseungjun/Desktop/vs_code_workspace/greensnapback0229.github.io/assets/image-20260303015556440.png)
+
+262144byte로 약 250kb 정도가 기본적으로 할당되어 있는 것을 확인할 수 있습니다. 
+
+
+
+### 아니 이게 말이됨?
+
+`sort buffer가 이렇게 작으면 text, blob 같 긴 데이터 1개만 들어가도 메모리에 몇개 못올리는거 아닌가?`
+
+라고 생각할 수 있는데 공식 문서에서는 
+
+```
+<sort_key, rowid>
+<sort_key, additional_fields>
+<sort_key, packed_additional_fields>
+```
+
+다음과 같이 sort_key와 rowid를 key-value 형태로 조합하여 정렬한다고 합니다. 
+
+때문에 정말 큰 문자열을 기준으로 정렬하지 않는 이상, sort_key 자료형의 크기와 row_pointer의 크기가 1행을 대신하는거죠. 
+
+
+
+### 정렬해보자
+
+
+
+```sql
+mysql> EXPLAIN ANALYZE
+    -> SELECT *
+    -> FROM user_test
+    -> ORDER BY score DESC;
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| EXPLAIN                                                                                                                                                               |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| -> Sort: user_test.score DESC  (cost=791779 rows=4.67e+6) (actual time=789284..792818 rows=5e+6 loops=1)
+    -> Table scan on user_test  (cost=791779 rows=4.67e+6) (actual time=11.6..23884 rows=5e+6 loops=1)
+|
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1 row in set (13 min 14.25 sec)
+```
+
+
+
+
+
+```sql
+mysql> EXPLAIN ANALYZE
+    -> SELECT *
+    -> FROM user_test
+    -> ORDER BY score DESC
+    -> LIMIT 1000;
+    
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| EXPLAIN                                                                                                                                                                          
+| -> Limit: 1000 row(s)  (cost=792450 rows=1000) (actual time=83279..83280 rows=1000 loops=1)
+|   -> Sort: user_test.score DESC, limit input to 1000 row(s) per chunk  (cost=792450 rows=4.67e+6) (actual time=83279..83279 rows=1000 loops=1)
+|       -> Table scan on user_test  (cost=792450 rows=4.67e+6) (actual time=7.88..18508 rows=5e+6 loops=1) 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (1 min 23.33 sec)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
