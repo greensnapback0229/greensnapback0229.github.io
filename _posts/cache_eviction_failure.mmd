@@ -1,0 +1,9 @@
+flowchart TD
+    P[Memory pressure rises] --> E{Eviction policy decision}
+    E -->|LRU/LFU/FIFO/Random| R[Victim keys selected]
+    R --> H[Important key evicted]
+    H --> M[Unexpected miss]
+    M --> B[Backend load increase]
+
+    classDef danger fill:#ffe3e3,stroke:#c92a2a,color:#000;
+    class H,M,B danger;

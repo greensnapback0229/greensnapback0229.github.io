@@ -1,0 +1,12 @@
+flowchart LR
+    C1[Client 1] --> K{Cache Key Exists?}
+    C2[Client 2] --> K
+    C3[Client N] --> K
+    K -- No --> DB[(DB Query)]
+    DB --> S[Recompute Data]
+    S --> SET[Set Cache]
+    SET --> R[Return Response]
+    DB -. simultaneous misses .-> DB
+
+    classDef danger fill:#ffe3e3,stroke:#c92a2a,color:#000;
+    class DB danger;

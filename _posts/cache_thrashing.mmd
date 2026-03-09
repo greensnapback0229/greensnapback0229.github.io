@@ -1,0 +1,9 @@
+flowchart LR
+    W[Working Set > Cache Capacity] --> I[Frequent Inserts]
+    I --> X[Existing keys evicted quickly]
+    X --> M[Hit ratio drops]
+    M --> L[Miss increases]
+    L --> I
+
+    classDef warn fill:#fff9db,stroke:#f59f00,color:#000;
+    class W,I,X,M,L warn;

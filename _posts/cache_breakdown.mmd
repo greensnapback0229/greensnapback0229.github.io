@@ -1,0 +1,10 @@
+flowchart LR
+    H[Hot Key] --> E[Hot key expired]
+    E --> M[Requests all miss same key]
+    M --> DB[(DB 집중 조회)]
+    DB --> D[Downstream overload]
+
+    classDef hot fill:#fff3bf,stroke:#f08c00,color:#000;
+    classDef danger fill:#ffe3e3,stroke:#c92a2a,color:#000;
+    class H,E hot;
+    class DB,D danger;

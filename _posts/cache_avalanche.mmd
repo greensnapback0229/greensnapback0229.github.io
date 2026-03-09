@@ -1,0 +1,9 @@
+flowchart TD
+    T0[Many keys have same TTL] --> T1[TTL expires at once]
+    T1 --> T2[Mass Cache Miss]
+    T2 --> T3[DB/QPS Surge]
+    T3 --> T4[Latency Spike]
+    T4 --> T5[Timeout and Partial Failure]
+
+    classDef danger fill:#ffe3e3,stroke:#c92a2a,color:#000;
+    class T3,T4,T5 danger;
