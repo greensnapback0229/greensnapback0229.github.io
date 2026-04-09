@@ -6,10 +6,11 @@ category: [COMAtching, architecture]
 author: greensnapback0229
 tags: [diagram, 기술스택]
 summary: 
+image_dir: /assets/posts/comatching-architecture
 ---
 
 ## 아키텍처 개요
-![architecture](/assets/comatching_architecture.png)
+![architecture]({{ page.image_dir }}/comatching_architecture.png)
 
 | 구분  | 기술               |
 | --    | ---               |

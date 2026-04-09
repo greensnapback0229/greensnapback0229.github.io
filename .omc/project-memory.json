@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1773125017004,
+  "lastScanned": 1775613882576,
   "projectRoot": "/Users/seoseungjun/workspace/vs_code_workspace/greensnapback0229.github.io",
   "techStack": {
     "languages": [
@@ -47,7 +47,7 @@
       "path": "_data",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1773125016998,
+      "lastAccessed": 1775613882569,
       "keyFiles": [
         "contact.yml",
         "share.yml"
@@ -57,7 +57,7 @@
       "path": "_plugins",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1773125016998,
+      "lastAccessed": 1775613882573,
       "keyFiles": [
         "posts-lastmod-hook.rb"
       ]
@@ -65,8 +65,8 @@
     "_posts": {
       "path": "_posts",
       "purpose": null,
-      "fileCount": 18,
-      "lastAccessed": 1773125016999,
+      "fileCount": 20,
+      "lastAccessed": 1775613882573,
       "keyFiles": [
         "2025-09-28-OpenAI 연동 비동기 AI 토큰 스트리밍 개선 .md",
         "2025-09-28-Redis를 활용한 포인트 충전 멱등성 보장.md",
@@ -79,7 +79,7 @@
       "path": "_site",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1773125016999,
+      "lastAccessed": 1775613882574,
       "keyFiles": [
         "404.html",
         "app.min.js",
@@ -92,7 +92,7 @@
       "path": "_tabs",
       "purpose": null,
       "fileCount": 4,
-      "lastAccessed": 1773125016999,
+      "lastAccessed": 1775613882574,
       "keyFiles": [
         "about.md",
         "archives.md",
@@ -103,28 +103,59 @@
     "assets": {
       "path": "assets",
       "purpose": "Static assets",
-      "fileCount": 50,
-      "lastAccessed": 1773125016999,
+      "fileCount": 75,
+      "lastAccessed": 1775613882574,
       "keyFiles": [
         "External_merge_sort.svg",
+        "LFU.png",
+        "LRU.png",
         "Mermaid Chart - Create complex, visual diagrams with text.-2026-01-20-175814.png",
-        "Mermaid Chart - Create complex, visual diagrams with text.-2026-02-09-073654.png",
-        "batch_erd1.svg",
-        "batch_log1.png"
+        "Mermaid Chart - Create complex, visual diagrams with text.-2026-02-09-073654.png"
       ]
     },
     "_site/assets": {
       "path": "_site/assets",
       "purpose": "Static assets",
-      "fileCount": 50,
-      "lastAccessed": 1773125017000,
+      "fileCount": 75,
+      "lastAccessed": 1775613882575,
       "keyFiles": [
         "External_merge_sort.svg",
-        "Mermaid Chart - Create complex, visual diagrams with text.-2026-01-20-175814.png",
-        "Mermaid Chart - Create complex, visual diagrams with text.-2026-02-09-073654.png"
+        "LFU.png",
+        "LRU.png"
       ]
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "_posts/2025-10-28-AOP&Redis 활용 매칭 기능 멱등성 보장-2.md",
+      "accessCount": 2,
+      "lastAccessed": 1775613938754,
+      "type": "file"
+    },
+    {
+      "path": "_posts/2025-09-28-Redis를 활용한 포인트 충전 멱등성 보장.md",
+      "accessCount": 1,
+      "lastAccessed": 1775613943727,
+      "type": "file"
+    },
+    {
+      "path": "_posts/2025-09-28-분산 환경으로 매칭 기능 전환 및 RabbitMQ 도입.md",
+      "accessCount": 1,
+      "lastAccessed": 1775614261701,
+      "type": "file"
+    },
+    {
+      "path": "_posts/2024-01-27-COMAtching_Matching0/2025-01-27-[COMAtching] 매칭 서비스 개발기-1.md",
+      "accessCount": 1,
+      "lastAccessed": 1775614318798,
+      "type": "file"
+    },
+    {
+      "path": "_posts/2025-09-28-OpenAI 연동 비동기 AI 토큰 스트리밍 개선 .md",
+      "accessCount": 1,
+      "lastAccessed": 1775615513604,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }

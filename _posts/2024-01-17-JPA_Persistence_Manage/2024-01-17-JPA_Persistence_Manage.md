@@ -1,6 +1,7 @@
 ---
 categories: [JPA, Persistence_Manage]
 tags: [Persistence, 영속성]
+image_dir: /assets/posts/jpa-persistence-manage
 ---
 
 **Persistence Unit(영속성 유닛)**  
@@ -83,7 +84,7 @@ em.persist(member);
 엔티티 매니저는 커밋(`commit()`)직전까지 Insert SQL을 쓰기지연 SQL 저장소에 모아둔다 그리고 커밋할때 DB에 모두 보내는데 이를 **쓰기 지연(Transactional write-behind)라고**한다. 
 
 [쓰기지연 과정]
-![image](/assets/image.png)
+![image]({{ page.image_dir }}/image.png)
 
 이렇게 쓰기지연 저장소에 있던 Insert SQL들이 `commit()`이 실행되면 DB로 보내지고 그 후에 커밋된다.
 
