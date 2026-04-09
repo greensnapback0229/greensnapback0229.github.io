@@ -141,9 +141,9 @@ if (count <= 0) {
 
 
 
-> **왜 Processor에서 DB를 찌르면 안 되는가?**
-> Spring Batch의 Reader-Processor-Writer 모델에서 **I/O는 Reader와 Writer가 맡고, Processor는 CPU 변환(필터링·분기·매핑)만 담당**하는 것이 모범 패턴입니다.
-> Processor에서 item마다 DB 조회를 하면 호출 횟수가 item 수에 선형 비례합니다.
+> **왜 Processor에서 DB를 찌르면 안 되는가?**  
+> Spring Batch의 Reader-Processor-Writer 모델에서 **I/O는 Reader와 Writer가 맡고, Processor는 CPU 변환(필터링·분기·매핑)만 담당**하는 것이 모범 패턴입니다.  
+> Processor에서 item마다 DB 조회를 하면 호출 횟수가 item 수에 선형 비례합니다.  
 > chunk size만큼 모아서 처리할 수 있는 Reader/Writer와 달리, Processor는 item 1건당 1번 실행되기 때문에 per-item query의 비용이 그대로 N배로 누적됩니다.
 
 ```java
