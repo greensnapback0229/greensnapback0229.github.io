@@ -91,7 +91,9 @@ public JpaCursorItemReader<UserInfo> streakReader(
 
 `UserInfo`와 연관 엔티티를 한 번에 가져오고, Processor에서 메시지를 분기, Writer에서 FCM을 발송합니다. 단순한 chunk 기반 배치입니다.
 
-이 상태에서 19시 15분에 4만 5천여 명을 대상으로 돌렸을 때 결과는 다음과 같습니다.
+이 상태에서 Reader와 Processor까지의 시간을 측정해봤습니다. 
+
+19시 15분에 4만 5천여 명을 대상으로 돌렸을 때 결과는 다음과 같습니다.
 
 ```text
 Job: [streakAlertJob] completed in 1m6s716ms
@@ -112,9 +114,18 @@ spring_data_repository_invocations_seconds_sum 														 = 35.01초
 
 `countByUserInfo`가 **44,945번** 호출되고, 그 호출이 차지한 누적 시간이 **35초** 였습니다. 전체 배치 시간 1분 6초 중 67%가 이 메서드 호출이었습니다.
 
-원인은 Processor 코드였습니다. 기존 Processor의 주요 역할은 위 요구사항에 맞게 유저별로 알림 멘트를 분류하는 역할이었습니다. 
+해당 메서드는 Processor에서 호출했습니다.
+
+기존 Processor의 주요 역할은 위 요구사항에 맞게 유저별로 알림 멘트를 분류하는 역할이었습니다. 
 
 사용자의 review(회고) 작성 개수의 비교를 위해서 Processor 루프 안에서 명시적으로 count 쿼리를 발생시키는 구조입니다. 
+
+Reader에서 Chunk별로 DB 조회가 1건 진행되는 것에 반해 매 루프에서 발생하는 Processor의 해당 매서드 호출은  
+Chunk 기반 배치 시스템에 자연스럽지 않은 흐름이라고 생각했습니다. 
+
+
+
+> Processor의 `countByUserInfo` 호출부 
 
 ```java
 // 회고 횟수 분기를 위해서 유저당 1번씩 count 쿼리 발생
@@ -127,25 +138,41 @@ if (count <= 0) {
 } ...
 ```
 
-추가적인 쿼리를  줄인다면, 시간 단축을 기대할 수 있을거라 생각했습니다. DB를 찌르는 횟수가 2배로 주니까요
+<br>
 
-또한 Spring Batch 아키텍처에서 Processor에서 DB에서 값을 읽어 오는 것은 권장되지 않느다고 합니다.  
+Processor에서 카운트 조회를 줄이는 방법을 찾고자 했습니다.
 
-그 대안으로 서브쿼리를 사용하는 것은 어떤지 하는 스택오버 플로우 글을 보게되었고 현 상황에 도입해볼 수 있다고 생각했습니다.  
+그 대안으로 서브쿼리를 사용하는 것을 제안하는 스택오버 플로우 글을 보게되었고 현 상황에 도입해볼 수 있다고 생각했습니다.  
 
 - [관련 스택오버플로우 글](https://stackoverflow.com/questions/30507417/spring-batch-itemprocessor-query-database)
 
+<br/>
 
 
-> **왜 Processor에서 DB를 찌르면 안 되는가?**  
-> Spring Batch의 Reader-Processor-Writer 모델에서 **I/O는 Reader와 Writer가 맡고, Processor는 CPU 변환(필터링·분기·매핑)만 담당**하는 것이 모범 패턴입니다.  
-> Processor에서 item마다 DB 조회를 하면 호출 횟수가 item 수에 선형 비례합니다.  
-> chunk size만큼 모아서 처리할 수 있는 Reader/Writer와 달리, Processor는 item 1건당 1번 실행되기 때문에 per-item query의 비용이 그대로 N배로 누적됩니다.
+
+도입할 수 있다고 생각한 이유
+
+- 기존 DB의 reivew count는 index를 통해서 조회되므로 서브쿼리가 추가되어도 `full-scan`이 일어나지 않습니다.
+  explain 결과
+
+  ![explain_count_review.png]({{ page.image_dir }}/explain_count_review.png)
+
+  explain analyze 결과
+
+  ![explain_analyze_count_review]({{ page.image_dir }}/explain_analyze_count_review.png)
+
+- Reader에서 청크당 1회 조회로 DB 접근 수를 크게 줄일 수 있습니다. 
+
+
+
+<br>
+
+> 개선한 Reader의 JPQL
 
 ```java
 .queryString("SELECT u, "
     + "(SELECT MIN(r.reviewDate) FROM Review r WHERE r.userInfo = u), "
-    + "(SELECT COUNT(r) FROM Review r WHERE r.userInfo = u) "
+    + "(SELECT COUNT(r) FROM Review r WHERE r.userInfo = u) "			// 사용자 리뷰 수 세기
     + "FROM UserInfo u "
     + "LEFT JOIN FETCH u.osAuthInfo oi "
     + "LEFT JOIN FETCH u.streakInfo si "
@@ -154,7 +181,19 @@ if (count <= 0) {
     + "ORDER BY u.id")
 ```
 
-JPA에서 `SELECT u, ...` 처럼 여러 컬럼을 조회하면 `Object[]`로 결과가 반환되기 때문에, Reader에서 이를 받아 DTO로 매핑해줬습니다.
+JPA에서 `SELECT u, ...` 처럼 여러 컬럼을 조회하면 특정 Entity와 맵핑되지 않아  `Object[]`로 결과가 반환되기 때문에, Reader에서 반환할 Item DTO를 만들어 반환하도록 했습니다. 
+
+수정되지 않을 값이기 때문에 record 클래스를 사용하여서 DTO를 만들었습니다. 
+
+
+
+> UserStreakItem
+
+```java
+public record UserStreakItem(UserInfo userInfo, LocalDate firstReviewDate, long reviewCount) {
+  
+}
+```
 
 
 
@@ -231,25 +270,37 @@ public ItemStreamReader<UserStreakItem> streakReader(EntityManagerFactory entity
 Job: [streakAlertJob] completed in 22s489ms
 ```
 
-**1분 6초 → 22초**, 약 65% 단축되었습니다. 
+**1분 6초 → 22초**, 약 65% 단축되는 성과를 얻었습니다
 
 
 
-## 3. 진짜 부하 - 100만 건
+## 3. 모든 사람들이 같은 시간대에 집중된다면... - 100만 건
 
-여기까지는 베이스라인이고, 진짜 궁금한 건 100만 건이었습니다. `UPDATE streak_info SET review_at = '22:00:00'` 으로 모든 사용자의 알람 시간을 한 시점에 몰아넣고 다시 돌려봤습니다.
+구조적 문제를 다 해결했다고 생각하고 직접 모든 유저들이 한 시간대에 몰렸을때를 가정하여 100만개의 데이터를 22:00로 설정하고 배치를 진행해봤습니다.  
 
 > 배치 결과
 
 ![streak_batch_memory_oom]({{ page.image_dir }}/streak_batch_memory_oom.png)
 
-결과는 OOM(Out Of Memory) 이었습니다. Chunk 기반 Batch를 수행했고, Chunk size = 50이었기 때문에 OOM이 이해가 되지 않았습니다. 
+생각지도 못한 문제가 발생했습니다.  
+
+OOM(Out Of Memory)이 발생하면서 Job이 중단되었습니다. 
+
+Chunk 기반 Batch를 수행했고, Chunk size = 50인 싱글 스레드 배치 환경이었기 때문에 OOM 발생이 이해가 되지 않았습니다. 
+
+메모리 관련 메트릭을 확인해봤고 다음과 같은 추세를 확인했니다. 
 
 
+
+<br>
+
+> OOM 발생 지점 JVM Heap 메모리
 
 ![streak_batch_db_connection]({{ page.image_dir }}/streak_batch_db_connection.png)
 
-Grafana를 보니 배치가 돌아가는 내내 **DB 커넥션이 반납되지 않고 계속 점유**되고 있었습니다. Chunk 기반 배치인데 왜 메모리가 터질까? `JpaCursorItemReader`의 동작 원리를 다시 짚어볼 필요가 있었습니다.
+Tenured Gen ( = Old Generation) 공간의 급격한 증가를 확인할 수 있었습니다. 
+
+
 
 ### JpaCursorItemReader 동작 원리
 
@@ -442,6 +493,8 @@ Hibernate: 100만건 다 가져온 후 → 메모리에서 1,000개 추출 → O
 
 이런식으로 중복되는 id를 가진 상황에서 reader에서 id를 읽고 해당 id들을 processor에서 하나씩 DB에서 읽어오는 방식입니다.
 저는 굳이 processor에서 조회하지 않고 해당 패턴을 reader에서 모두 할 수 있도록 개발했습니다.
+
+
 
 
 | | 1단계 | 2단계 |
