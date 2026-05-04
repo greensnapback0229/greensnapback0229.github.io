@@ -1,0 +1,60 @@
+sequenceDiagram
+    autonumber
+    participant J as Job
+    participant S as Step
+    participant R as Reader<br/>(ItemStreamReader)
+    participant W as Writer
+    participant DB as MySQL<br/>(BATCH_STEP_EXECUTION_CONTEXT)
+
+    Note over J,DB: 최초 실행
+    J->>S: start (run.date=2025-08-16)
+    S->>R: open(ctx)
+    R->>R: nextOffset = startOffset (0)
+
+    rect rgb(232, 245, 233)
+    Note over S,DB: chunk 1 (offset 0~50) 정상 처리
+    S->>R: read x 50
+    R-->>S: items
+    S->>W: write(50)
+    W->>DB: INSERT 50건 + commit
+    S->>R: update(ctx)
+    R->>DB: nextOffset=50 저장 (같은 트랜잭션)
+    end
+
+    rect rgb(232, 245, 233)
+    Note over S,DB: chunk 2 (offset 50~100) 정상 처리
+    S->>R: read x 50
+    S->>W: write(50)
+    W->>DB: INSERT + commit + nextOffset=100 저장
+    end
+
+    rect rgb(255, 224, 224)
+    Note over S,W: chunk 3 (offset 100~150) 처리 중 실패
+    S->>R: read x 50
+    S->>W: write(50)
+    W--xS: DB 커넥션 끊김 → 롤백
+    Note over DB: nextOffset=100 그대로<br/>(update 호출 안됨)
+    end
+
+    S--xJ: FAILED
+
+    Note over J,DB: 재시작 (같은 run.date로 재실행)
+
+    J->>S: restart
+    S->>R: open(ctx)
+    R->>DB: nextOffset 조회
+    DB-->>R: 100
+    R->>R: nextOffset = 100 (이어서)
+
+    rect rgb(232, 245, 233)
+    Note over S,DB: chunk 3 재시도 (offset 100~150)
+    S->>R: read x 50
+    S->>W: write(50)
+    Note right of W: ON DUPLICATE KEY UPDATE<br/>로 멱등성 보장
+    W->>DB: UPSERT 50건 + commit
+    S->>R: update(ctx)
+    R->>DB: nextOffset=150 저장
+    end
+
+    Note over S,DB: 이후 chunk 정상 진행
+    S-->>J: COMPLETED
